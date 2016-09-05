@@ -1,0 +1,545 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="PingYourPackageModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="__MigrationHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+            <PropertyRef Name="ContextKey" />
+          </Key>
+          <Property Name="MigrationId" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="ContextKey" Type="nvarchar" MaxLength="300" Nullable="false" />
+          <Property Name="Model" Type="varbinary(max)" Nullable="false" />
+          <Property Name="ProductVersion" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Affiliates">
+          <Key>
+            <PropertyRef Name="Key" />
+          </Key>
+          <Property Name="Key" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CompanyName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TelephoneNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Roles">
+          <Key>
+            <PropertyRef Name="Key" />
+          </Key>
+          <Property Name="Key" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Shipments">
+          <Key>
+            <PropertyRef Name="Key" />
+          </Key>
+          <Property Name="Key" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AffiliateKey" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ShipmentTypeKey" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ReceiverName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ReceiverSurname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ReceiverAddress" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ReceiverZipCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ReceiverCity" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ReceiverCountry" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ReceiverTelephone" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ReceiverEmail" Type="nvarchar" MaxLength="320" Nullable="false" />
+          <Property Name="CreateOn" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ShipmentStates">
+          <Key>
+            <PropertyRef Name="Key" />
+          </Key>
+          <Property Name="Key" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ShipmentKey" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ShipmentStatus" Type="int" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ShipmentTypes">
+          <Key>
+            <PropertyRef Name="Key" />
+          </Key>
+          <Property Name="Key" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserInRoles">
+          <Key>
+            <PropertyRef Name="Key" />
+          </Key>
+          <Property Name="Key" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserKey" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RoleKey" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Key" />
+          </Key>
+          <Property Name="Key" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="320" Nullable="false" />
+          <Property Name="HashedPassword" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Salt" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsLocked" Type="bit" Nullable="false" />
+          <Property Name="CreateOn" Type="datetime" Nullable="false" />
+          <Property Name="LastUpdateOn" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_dbo_Affiliates_dbo_Users_Key">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Affiliates" Type="Self.Affiliates" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Key" />
+            </Principal>
+            <Dependent Role="Affiliates">
+              <PropertyRef Name="Key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Shipments_dbo_Affiliates_AffiliateKey">
+          <End Role="Affiliates" Type="Self.Affiliates" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Shipments" Type="Self.Shipments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Affiliates">
+              <PropertyRef Name="Key" />
+            </Principal>
+            <Dependent Role="Shipments">
+              <PropertyRef Name="AffiliateKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Shipments_dbo_ShipmentTypes_ShipmentTypeKey">
+          <End Role="ShipmentTypes" Type="Self.ShipmentTypes" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Shipments" Type="Self.Shipments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ShipmentTypes">
+              <PropertyRef Name="Key" />
+            </Principal>
+            <Dependent Role="Shipments">
+              <PropertyRef Name="ShipmentTypeKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_ShipmentStates_dbo_Shipments_ShipmentKey">
+          <End Role="Shipments" Type="Self.Shipments" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ShipmentStates" Type="Self.ShipmentStates" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shipments">
+              <PropertyRef Name="Key" />
+            </Principal>
+            <Dependent Role="ShipmentStates">
+              <PropertyRef Name="ShipmentKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserInRoles_dbo_Roles_RoleKey">
+          <End Role="Roles" Type="Self.Roles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserInRoles" Type="Self.UserInRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Key" />
+            </Principal>
+            <Dependent Role="UserInRoles">
+              <PropertyRef Name="RoleKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserInRoles_dbo_Users_UserKey">
+          <End Role="Users" Type="Self.Users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserInRoles" Type="Self.UserInRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Key" />
+            </Principal>
+            <Dependent Role="UserInRoles">
+              <PropertyRef Name="UserKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PingYourPackageModelStoreContainer">
+          <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Affiliates" EntityType="Self.Affiliates" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Shipments" EntityType="Self.Shipments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShipmentStates" EntityType="Self.ShipmentStates" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShipmentTypes" EntityType="Self.ShipmentTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserInRoles" EntityType="Self.UserInRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_Affiliates_dbo_Users_Key" Association="Self.FK_dbo_Affiliates_dbo_Users_Key">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Affiliates" EntitySet="Affiliates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Shipments_dbo_Affiliates_AffiliateKey" Association="Self.FK_dbo_Shipments_dbo_Affiliates_AffiliateKey">
+            <End Role="Affiliates" EntitySet="Affiliates" />
+            <End Role="Shipments" EntitySet="Shipments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Shipments_dbo_ShipmentTypes_ShipmentTypeKey" Association="Self.FK_dbo_Shipments_dbo_ShipmentTypes_ShipmentTypeKey">
+            <End Role="ShipmentTypes" EntitySet="ShipmentTypes" />
+            <End Role="Shipments" EntitySet="Shipments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_ShipmentStates_dbo_Shipments_ShipmentKey" Association="Self.FK_dbo_ShipmentStates_dbo_Shipments_ShipmentKey">
+            <End Role="Shipments" EntitySet="Shipments" />
+            <End Role="ShipmentStates" EntitySet="ShipmentStates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserInRoles_dbo_Roles_RoleKey" Association="Self.FK_dbo_UserInRoles_dbo_Roles_RoleKey">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="UserInRoles" EntitySet="UserInRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserInRoles_dbo_Users_UserKey" Association="Self.FK_dbo_UserInRoles_dbo_Users_UserKey">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserInRoles" EntitySet="UserInRoles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PingYourPackageModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="C__MigrationHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+            <PropertyRef Name="ContextKey" />
+          </Key>
+          <Property Name="MigrationId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ContextKey" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Model" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="ProductVersion" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Affiliate">
+          <Key>
+            <PropertyRef Name="Key" />
+          </Key>
+          <Property Name="Key" Type="Guid" Nullable="false" />
+          <Property Name="CompanyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TelephoneNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="User" Relationship="Self.FK_dbo_Affiliates_dbo_Users_Key" FromRole="Affiliates" ToRole="Users" />
+          <NavigationProperty Name="Shipments" Relationship="Self.FK_dbo_Shipments_dbo_Affiliates_AffiliateKey" FromRole="Affiliates" ToRole="Shipments" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="Key" />
+          </Key>
+          <Property Name="Key" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="UserInRoles" Relationship="Self.FK_dbo_UserInRoles_dbo_Roles_RoleKey" FromRole="Roles" ToRole="UserInRoles" />
+        </EntityType>
+        <EntityType Name="Shipment">
+          <Key>
+            <PropertyRef Name="Key" />
+          </Key>
+          <Property Name="Key" Type="Guid" Nullable="false" />
+          <Property Name="AffiliateKey" Type="Guid" Nullable="false" />
+          <Property Name="ShipmentTypeKey" Type="Guid" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ReceiverName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ReceiverSurname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ReceiverAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ReceiverZipCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ReceiverCity" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ReceiverCountry" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ReceiverTelephone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ReceiverEmail" Type="String" MaxLength="320" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreateOn" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Affiliate" Relationship="Self.FK_dbo_Shipments_dbo_Affiliates_AffiliateKey" FromRole="Shipments" ToRole="Affiliates" />
+          <NavigationProperty Name="ShipmentType" Relationship="Self.FK_dbo_Shipments_dbo_ShipmentTypes_ShipmentTypeKey" FromRole="Shipments" ToRole="ShipmentTypes" />
+          <NavigationProperty Name="ShipmentStates" Relationship="Self.FK_dbo_ShipmentStates_dbo_Shipments_ShipmentKey" FromRole="Shipments" ToRole="ShipmentStates" />
+        </EntityType>
+        <EntityType Name="ShipmentState">
+          <Key>
+            <PropertyRef Name="Key" />
+          </Key>
+          <Property Name="Key" Type="Guid" Nullable="false" />
+          <Property Name="ShipmentKey" Type="Guid" Nullable="false" />
+          <Property Name="ShipmentStatus" Type="Int32" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Shipment" Relationship="Self.FK_dbo_ShipmentStates_dbo_Shipments_ShipmentKey" FromRole="ShipmentStates" ToRole="Shipments" />
+        </EntityType>
+        <EntityType Name="ShipmentType">
+          <Key>
+            <PropertyRef Name="Key" />
+          </Key>
+          <Property Name="Key" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Shipments" Relationship="Self.FK_dbo_Shipments_dbo_ShipmentTypes_ShipmentTypeKey" FromRole="ShipmentTypes" ToRole="Shipments" />
+        </EntityType>
+        <EntityType Name="UserInRole">
+          <Key>
+            <PropertyRef Name="Key" />
+          </Key>
+          <Property Name="Key" Type="Guid" Nullable="false" />
+          <Property Name="UserKey" Type="Guid" Nullable="false" />
+          <Property Name="RoleKey" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Role" Relationship="Self.FK_dbo_UserInRoles_dbo_Roles_RoleKey" FromRole="UserInRoles" ToRole="Roles" />
+          <NavigationProperty Name="User" Relationship="Self.FK_dbo_UserInRoles_dbo_Users_UserKey" FromRole="UserInRoles" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Key" />
+          </Key>
+          <Property Name="Key" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="320" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="HashedPassword" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Salt" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsLocked" Type="Boolean" Nullable="false" />
+          <Property Name="CreateOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastUpdateOn" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Affiliate" Relationship="Self.FK_dbo_Affiliates_dbo_Users_Key" FromRole="Users" ToRole="Affiliates" />
+          <NavigationProperty Name="UserInRoles" Relationship="Self.FK_dbo_UserInRoles_dbo_Users_UserKey" FromRole="Users" ToRole="UserInRoles" />
+        </EntityType>
+        <Association Name="FK_dbo_Affiliates_dbo_Users_Key">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="Affiliates" Type="Self.Affiliate" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Key" />
+            </Principal>
+            <Dependent Role="Affiliates">
+              <PropertyRef Name="Key" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Shipments_dbo_Affiliates_AffiliateKey">
+          <End Role="Affiliates" Type="Self.Affiliate" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Shipments" Type="Self.Shipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Affiliates">
+              <PropertyRef Name="Key" />
+            </Principal>
+            <Dependent Role="Shipments">
+              <PropertyRef Name="AffiliateKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserInRoles_dbo_Roles_RoleKey">
+          <End Role="Roles" Type="Self.Role" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserInRoles" Type="Self.UserInRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Roles">
+              <PropertyRef Name="Key" />
+            </Principal>
+            <Dependent Role="UserInRoles">
+              <PropertyRef Name="RoleKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Shipments_dbo_ShipmentTypes_ShipmentTypeKey">
+          <End Role="ShipmentTypes" Type="Self.ShipmentType" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Shipments" Type="Self.Shipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ShipmentTypes">
+              <PropertyRef Name="Key" />
+            </Principal>
+            <Dependent Role="Shipments">
+              <PropertyRef Name="ShipmentTypeKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_ShipmentStates_dbo_Shipments_ShipmentKey">
+          <End Role="Shipments" Type="Self.Shipment" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ShipmentStates" Type="Self.ShipmentState" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shipments">
+              <PropertyRef Name="Key" />
+            </Principal>
+            <Dependent Role="ShipmentStates">
+              <PropertyRef Name="ShipmentKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserInRoles_dbo_Users_UserKey">
+          <End Role="Users" Type="Self.User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserInRoles" Type="Self.UserInRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Key" />
+            </Principal>
+            <Dependent Role="UserInRoles">
+              <PropertyRef Name="UserKey" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PingYourPackageEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="C__MigrationHistory" EntityType="Self.C__MigrationHistory" />
+          <EntitySet Name="Affiliates" EntityType="Self.Affiliate" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="Shipments" EntityType="Self.Shipment" />
+          <EntitySet Name="ShipmentStates" EntityType="Self.ShipmentState" />
+          <EntitySet Name="ShipmentTypes" EntityType="Self.ShipmentType" />
+          <EntitySet Name="UserInRoles" EntityType="Self.UserInRole" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_dbo_Affiliates_dbo_Users_Key" Association="Self.FK_dbo_Affiliates_dbo_Users_Key">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Affiliates" EntitySet="Affiliates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Shipments_dbo_Affiliates_AffiliateKey" Association="Self.FK_dbo_Shipments_dbo_Affiliates_AffiliateKey">
+            <End Role="Affiliates" EntitySet="Affiliates" />
+            <End Role="Shipments" EntitySet="Shipments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserInRoles_dbo_Roles_RoleKey" Association="Self.FK_dbo_UserInRoles_dbo_Roles_RoleKey">
+            <End Role="Roles" EntitySet="Roles" />
+            <End Role="UserInRoles" EntitySet="UserInRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Shipments_dbo_ShipmentTypes_ShipmentTypeKey" Association="Self.FK_dbo_Shipments_dbo_ShipmentTypes_ShipmentTypeKey">
+            <End Role="ShipmentTypes" EntitySet="ShipmentTypes" />
+            <End Role="Shipments" EntitySet="Shipments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_ShipmentStates_dbo_Shipments_ShipmentKey" Association="Self.FK_dbo_ShipmentStates_dbo_Shipments_ShipmentKey">
+            <End Role="Shipments" EntitySet="Shipments" />
+            <End Role="ShipmentStates" EntitySet="ShipmentStates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserInRoles_dbo_Users_UserKey" Association="Self.FK_dbo_UserInRoles_dbo_Users_UserKey">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserInRoles" EntitySet="UserInRoles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PingYourPackageModelStoreContainer" CdmEntityContainer="PingYourPackageEntities">
+          <EntitySetMapping Name="C__MigrationHistory">
+            <EntityTypeMapping TypeName="PingYourPackageModel.C__MigrationHistory">
+              <MappingFragment StoreEntitySet="__MigrationHistory">
+                <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
+                <ScalarProperty Name="ContextKey" ColumnName="ContextKey" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="ProductVersion" ColumnName="ProductVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Affiliates">
+            <EntityTypeMapping TypeName="PingYourPackageModel.Affiliate">
+              <MappingFragment StoreEntitySet="Affiliates">
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="TelephoneNumber" ColumnName="TelephoneNumber" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="PingYourPackageModel.Role">
+              <MappingFragment StoreEntitySet="Roles">
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Shipments">
+            <EntityTypeMapping TypeName="PingYourPackageModel.Shipment">
+              <MappingFragment StoreEntitySet="Shipments">
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="AffiliateKey" ColumnName="AffiliateKey" />
+                <ScalarProperty Name="ShipmentTypeKey" ColumnName="ShipmentTypeKey" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="ReceiverName" ColumnName="ReceiverName" />
+                <ScalarProperty Name="ReceiverSurname" ColumnName="ReceiverSurname" />
+                <ScalarProperty Name="ReceiverAddress" ColumnName="ReceiverAddress" />
+                <ScalarProperty Name="ReceiverZipCode" ColumnName="ReceiverZipCode" />
+                <ScalarProperty Name="ReceiverCity" ColumnName="ReceiverCity" />
+                <ScalarProperty Name="ReceiverCountry" ColumnName="ReceiverCountry" />
+                <ScalarProperty Name="ReceiverTelephone" ColumnName="ReceiverTelephone" />
+                <ScalarProperty Name="ReceiverEmail" ColumnName="ReceiverEmail" />
+                <ScalarProperty Name="CreateOn" ColumnName="CreateOn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShipmentStates">
+            <EntityTypeMapping TypeName="PingYourPackageModel.ShipmentState">
+              <MappingFragment StoreEntitySet="ShipmentStates">
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="ShipmentKey" ColumnName="ShipmentKey" />
+                <ScalarProperty Name="ShipmentStatus" ColumnName="ShipmentStatus" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShipmentTypes">
+            <EntityTypeMapping TypeName="PingYourPackageModel.ShipmentType">
+              <MappingFragment StoreEntitySet="ShipmentTypes">
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserInRoles">
+            <EntityTypeMapping TypeName="PingYourPackageModel.UserInRole">
+              <MappingFragment StoreEntitySet="UserInRoles">
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="UserKey" ColumnName="UserKey" />
+                <ScalarProperty Name="RoleKey" ColumnName="RoleKey" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="PingYourPackageModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="HashedPassword" ColumnName="HashedPassword" />
+                <ScalarProperty Name="Salt" ColumnName="Salt" />
+                <ScalarProperty Name="IsLocked" ColumnName="IsLocked" />
+                <ScalarProperty Name="CreateOn" ColumnName="CreateOn" />
+                <ScalarProperty Name="LastUpdateOn" ColumnName="LastUpdateOn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

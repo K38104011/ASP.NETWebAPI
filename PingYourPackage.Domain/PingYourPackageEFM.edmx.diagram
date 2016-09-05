@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="50bd6edf5ac64ed8b6f7ce962d3ded83" Name="Diagram1">
+        <EntityTypeShape EntityType="PingYourPackageModel.C__MigrationHistory" Width="1.5" PointX="0.75" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PingYourPackageModel.Affiliate" Width="1.5" PointX="8.125" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PingYourPackageModel.Role" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PingYourPackageModel.Shipment" Width="1.5" PointX="8.125" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="PingYourPackageModel.ShipmentState" Width="1.5" PointX="5.625" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PingYourPackageModel.ShipmentType" Width="1.5" PointX="5.625" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PingYourPackageModel.UserInRole" Width="1.5" PointX="3.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PingYourPackageModel.User" Width="1.5" PointX="5.625" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="PingYourPackageModel.FK_dbo_Affiliates_dbo_Users_Key" ManuallyRouted="false" />
+        <AssociationConnector Association="PingYourPackageModel.FK_dbo_Shipments_dbo_Affiliates_AffiliateKey" ManuallyRouted="false" />
+        <AssociationConnector Association="PingYourPackageModel.FK_dbo_UserInRoles_dbo_Roles_RoleKey" ManuallyRouted="false" />
+        <AssociationConnector Association="PingYourPackageModel.FK_dbo_Shipments_dbo_ShipmentTypes_ShipmentTypeKey" ManuallyRouted="false" />
+        <AssociationConnector Association="PingYourPackageModel.FK_dbo_ShipmentStates_dbo_Shipments_ShipmentKey" ManuallyRouted="false" />
+        <AssociationConnector Association="PingYourPackageModel.FK_dbo_UserInRoles_dbo_Users_UserKey" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
