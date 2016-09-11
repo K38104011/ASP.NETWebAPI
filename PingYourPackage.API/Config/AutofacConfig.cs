@@ -1,7 +1,11 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
+using PingYourPackage.Domain.Entities;
+using PingYourPackage.Domain.Entities.Core;
+using PingYourPackage.Domain.Entities.Service;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -24,8 +28,30 @@ namespace PingYourPackage.API.Config
 
         private static IContainer RegisterServices(ContainerBuilder builder)
         {
-            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+            builder.RegisterApiControllers(Assembly.GetExecutingAssembly()).PropertiesAutowired();
+
+            // EF DbContext
+            builder.RegisterType<EntitiesContext>().As<DbContext>().InstancePerRequest();
+
+            builder.RegisterGeneric(typeof(EntityRepository<>))
+                .As(typeof(IEntityRepository<>))
+                .InstancePerRequest();
+
+            // Services
+            builder.RegisterType<CryptoService>()
+                .As<ICryptoService>()
+                .InstancePerRequest();
+
+            builder.RegisterType<MembershipService>()
+                .As<IMembershipService>()
+                .InstancePerRequest();
+
+            builder.RegisterType<ShipmentService>()
+                .As<IShipmentService>()
+                .InstancePerRequest();
+
             return builder.Build();
         }
+
     }
 }

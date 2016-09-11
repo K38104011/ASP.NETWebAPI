@@ -72,19 +72,26 @@ namespace PingYourPackage.Domain.Entities.Core
             _entitiesContext.Set<T>().Add(entity);
         }
 
-        public void Delete(T entity)
+        public virtual void Delete(T entity)
         {
             DbEntityEntry dbEntityEntry = _entitiesContext.Entry<T>(entity);
             dbEntityEntry.State = EntityState.Deleted;
         }
 
-        public void Edit(T entity)
+        public virtual void DeleteGraph(T entity)
+        {
+            DbSet<T> dbSet = _entitiesContext.Set<T>();
+            dbSet.Attach(entity);
+            dbSet.Remove(entity);
+        }
+
+        public virtual void Edit(T entity)
         {
             DbEntityEntry dbEntityEntry = _entitiesContext.Entry<T>(entity);
             dbEntityEntry.State = EntityState.Modified;
         }
 
-        public void Save()
+        public virtual void Save()
         {
             _entitiesContext.SaveChanges();
         }
